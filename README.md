@@ -8,7 +8,6 @@ Incluye:
 - Modo claro / oscuro
 - Guardado automático del contenido
 
-
 ### Prueba de concepto
 
 La siguiente prueba de concepto muestra el funcionamiento básico de la aplicación.
@@ -27,7 +26,6 @@ Desde la carpeta del proyecto:
 
 ```bash
 docker build -t clipy .
-mkdir data
 
 docker run \
 -p 8000:3000 \
