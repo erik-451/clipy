@@ -11,6 +11,18 @@ Incluye:
 - Docker ready
 
 
+### Prueba de concepto
+
+La siguiente prueba de concepto muestra el funcionamiento básico de la aplicación.
+
+Primero se presenta la pantalla de login, donde se solicita la contraseña para acceder al sistema.
+
+<img width="1072" height="548" alt="Demo-Login" src="https://github.com/user-attachments/assets/0220ed18-f2cc-48e5-90ce-f9ebb4864b94" />
+
+A continuación se muestra el dashboard principal, donde se visualiza el editor colaborativo con pestañas persistentes, permitiendo crear, renombrar y editar contenido en tiempo real.
+
+<img width="1901" height="803" alt="Demo-Dashboard" src="https://github.com/user-attachments/assets/962b86b0-c0da-4abd-b60b-05db2397a0a2" />
+
 ## Ejecutar
 
 Desde la carpeta del proyecto:
@@ -26,6 +38,7 @@ docker run \
 --name clipy \
 clipy
 ````
+
 
 Abrir:
 
