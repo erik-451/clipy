@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Clipy</title>
+
+<style>
+:root{
+  --bg:#0b1220;
+  --card:#020617;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --border:#1e293b;
+  --accent:#6366f1;
+  --shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+body.light{
+  --bg:#e5e7eb;
+  --card:#ffffff;
+  --text:#020617;
+  --muted:#64748b;
+  --border:#cbd5e1;
+  --shadow:0 20px 50px rgba(0,0,0,.12);
+}
+
+*{
+  box-sizing:border-box;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.25s;
+}
+
+/* THEME TOGGLE */
+.theme{
+  position:fixed;
+  top:16px;
+  right:18px;
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  z-index:9999;
+  user-select:none;
+}
+
+.theme span{font-size:18px}
+
+/* LOGIN CARD */
+.card{
+  width:380px;
+  padding:28px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--card);
+  box-shadow:var(--shadow);
+}
+
+h2{margin:0 0 14px}
+
+.sub{
+  font-size:13px;
+  color:var(--muted);
+  margin:0 0 18px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  font-size:14px;
+}
+
+input:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(99,102,241,.18);
+}
+
+button{
+  margin-top:12px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:white;
+  font-weight:650;
+  cursor:pointer;
+}
+
+#error{
+  margin-top:10px;
+  color:#f87171;
+  font-size:13px;
+}
+
+/* EDITOR WRAPPER */
+.editor-wrapper{
+  display:none;
+  flex-direction:column;
+  gap:12px;
+  width:min(980px,92vw);
+  background:var(--card);
+  padding:18px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+/* TABS BAR */
+.tabs{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+/* TAB */
+.tab{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  cursor:pointer;
+  font-size:13px;
+  user-select:none;
+  transition:.15s;
+}
+
+.tab:hover{
+  background:rgba(255,255,255,.08);
+}
+
+.tab.active{
+  background:var(--accent);
+  border-color:transparent;
+  color:white;
+}
+
+.tab .close{
+  opacity:.7;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.tab .close:hover{opacity:1}
+
+/* NEW TAB */
+.newtab{
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px dashed var(--border);
+  cursor:pointer;
+  user-select:none;
+  opacity:.85;
+}
+
+.newtab:hover{opacity:1}
+
+/* TEXTAREA */
+textarea{
+  width:100%;
+  height:55vh;
+  min-height:300px;
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  font-size:15px;
+  line-height:1.5;
+  resize:vertical;
+}
+
+textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(99,102,241,.18);
+}
+
+/* STATUS */
+.status{
+  font-size:12px;
+  color:var(--muted);
+  margin-left:auto;
+  user-select:none;
+}
+
+/* -------- LIGHT MODE CONTRAST FIX -------- */
+
+body.light .tab{
+  background:#f1f5f9;
+  border-color:#cbd5e1;
+  color:#020617;
+}
+
+body.light .tab:hover{
+  background:#e2e8f0;
+}
+
+body.light .tab.active{
+  background:#6366f1;
+  color:white;
+}
+
+body.light .newtab{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+  color:#020617;
+}
+
+body.light .editor-wrapper{
+  background:white;
+}
+
+body.light textarea{
+  background:#ffffff;
+}
+
+body.light .close{
+  color:#475569;
+}
+
+body.light .close:hover{
+  color:#020617;
+}
+</style>
+</head>
+
+<body>
+
+<div class="theme" id="themeBtn" title="Cambiar tema"><span id="themeIcon">🌙</span></div>
+
+<div class="card" id="login">
+  <h2>Clipy :)</h2>
+  <p class="sub">Texto compartido en tiempo real (WebSockets)</p>
+
+  <input id="pass" type="password" placeholder="Contraseña">
+  <button id="loginBtn">Acceder</button>
+
+  <div id="error"></div>
+</div>
+
+<div class="editor-wrapper" id="editorWrap">
+  <div class="tabs" id="tabs"></div>
+  <div class="status" id="status">Desconectado</div>
+  <textarea id="editor" placeholder="Escribe aquí…"></textarea>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+let ws;
+let authenticated=false;
+
+// ----- STATE FROM SERVER -----
+let state={tabs:[]};
+let activeTab=0;
+
+// ----- ELEMENTS -----
+const pass=document.getElementById("pass");
+const editor=document.getElementById("editor");
+const loginCard=document.getElementById("login");
+const editorWrap=document.getElementById("editorWrap");
+const errorBox=document.getElementById("error");
+const tabsEl=document.getElementById("tabs");
+const statusEl=document.getElementById("status");
+
+const themeBtn=document.getElementById("themeBtn");
+const themeIcon=document.getElementById("themeIcon");
+
+// ----- THEME -----
+function applyTheme(){
+ themeIcon.textContent=document.body.classList.contains("light")?"☀️":"🌙";
+}
+
+if(localStorage.theme==="light") document.body.classList.add("light");
+applyTheme();
+
+themeBtn.onclick=()=>{
+ document.body.classList.toggle("light");
+ localStorage.theme=document.body.classList.contains("light")?"light":"dark";
+ applyTheme();
+};
+
+// ----- TABS RENDER -----
+function render(){
+
+ tabsEl.innerHTML="";
+
+ state.tabs.forEach((t,i)=>{
+
+  const tab=document.createElement("div");
+  tab.className="tab"+(i===activeTab?" active":"");
+  const name=document.createElement("div");
+  name.className="name";
+  name.textContent=t.name;
+
+  const close=document.createElement("div");
+  close.className="close";
+  close.textContent="✕";
+
+  tab.appendChild(name);
+  tab.appendChild(close);
+  tab.onclick=()=>{activeTab=i;render()};
+
+  tab.querySelector(".name").ondblclick=e=>{
+    e.stopPropagation();
+    const n=prompt("Nombre pestaña:",t.name);
+    if(n){
+      t.name=n;
+      sync();
+    }
+  };
+
+  tab.querySelector(".close").onclick=e=>{
+    e.stopPropagation();
+    state.tabs.splice(i,1);
+    if(activeTab>=state.tabs.length) activeTab=state.tabs.length-1;
+    sync();
+  };
+
+  tabsEl.appendChild(tab);
+ });
+
+ const plus=document.createElement("div");
+ plus.className="newtab";
+ plus.innerText="+";
+ plus.onclick=()=>{
+   state.tabs.push({name:"Nueva",text:""});
+   activeTab=state.tabs.length-1;
+   sync();
+ };
+ tabsEl.appendChild(plus);
+
+ editor.value=state.tabs[activeTab]?.text||"";
+}
+
+// ----- SYNC -----
+function sync(){
+ if(ws && ws.readyState===1){
+  ws.send(JSON.stringify(state));
+ }
+ render();
+}
+
+editor.oninput=()=>{
+ if(!authenticated) return;
+ state.tabs[activeTab].text=editor.value;
+ sync();
+};
+
+// ----- LOGIN -----
+function login(){
+
+ errorBox.innerText="";
+ statusEl.innerText="Conectando…";
+
+ ws=new WebSocket("ws://"+location.host);
+
+ ws.onopen=()=>ws.send(pass.value);
+
+ ws.onmessage=e=>{
+
+  if(e.data==="__AUTH_OK__"){
+    authenticated=true;
+    loginCard.style.display="none";
+    editorWrap.style.display="flex";
+    statusEl.innerText="Conectado";
+    return;
+  }
+
+  if(e.data.startsWith("__AUTH_FAIL__")){
+    errorBox.innerText="Contraseña incorrecta. Intentos restantes: "+e.data.split(":")[1];
+    statusEl.innerText="Error";
+    return;
+  }
+
+  if(e.data.startsWith("__BLOCKED__")){
+    errorBox.innerText="Bloqueado durante "+e.data.split(":")[1]+" segundos";
+    statusEl.innerText="Bloqueado";
+    return;
+  }
+
+  // STATE FROM SERVER
+  state=JSON.parse(e.data);
+  render();
+ };
+
+ ws.onclose=()=>statusEl.innerText="Desconectado";
+ ws.onerror=()=>statusEl.innerText="Error";
+}
+
+document.getElementById("loginBtn").onclick=login;
+
+pass.addEventListener("keydown",e=>{
+ if(e.key==="Enter") login();
+});
+
+});
+</script>
+
+</body>
+</html>
