@@ -3,12 +3,10 @@
 Mini editor colaborativo en tiempo real (WebSockets + Node.js).
 
 Incluye:
-- Login con contraseña
-- Pestañas persistentes
-- Renombrar pestañas
-- Dark / Light mode
-- Guardado automático
-- Docker ready
+- Acceso por contraseña
+- Pestañas persistentes con nombre editable
+- Modo claro / oscuro
+- Guardado automático del contenido
 
 
 ### Prueba de concepto
